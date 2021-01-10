@@ -1,10 +1,12 @@
 #include <iostream>
 #include <vector>
+#include <ctime>
+#include <cstdlib>
 
-std::vector<bool> dvoich(int a)
+std::vector<bool> dvoich(int a) //перевод из десятичного в двоичного
 {
     std::vector<bool> temp_2;
-    std::vector<bool> temp2;
+    std::vector<bool> result;
     while(a >= 2)
     {
         if (a % 2)
@@ -17,66 +19,101 @@ std::vector<bool> dvoich(int a)
         }
         a /= 2;
     }
+    if (a == 1)
+        temp_2.push_back(1);
+    else temp_2.push_back(0);
 
-    for(int i = 0; i < temp_2.size(); i++)
+    for(int i = temp_2.size()-1; i>=0; i--)
     {
-        temp2[i] = temp_2[temp_2.size() - i - 1];
+        result.push_back(temp_2[i]);
     }
-    return temp2;
+    return result;
 }
 
-class shifr
+int desyatich (std::vector<bool> a)
+{
+
+}
+
+class gammirovanie
 {
 public:
-    std::string text;
-    std::vector<bool> text_2;
-    std::vector<bool> gamma;
-    std::string c_text;
+    std::string text; //Исходный текст
+    std::vector<std::vector<bool>> text_2; //Исходный текст в довичном коде ASCII
+    std::vector<std::vector<bool>> gamma; //Гамма для шифрования
+    std::string c_text; //Зашифрованный текст
+    std::vector<std::vector<bool>> c_text_2; // Зашифрованный текст в двочиыном коде
 
-    shifr(): text("0"), c_text("0")
+    gammirovanie(): text("0"), c_text("0") //Конструктор по умолчанию
     {
-        gamma.push_back(0);
-        text_2.push_back(0);
+        gamma.push_back(std::vector<bool>(0));
+        text_2.push_back(std::vector<bool>(0));
+        c_text_2.push_back(std::vector<bool>(0));
     };
 
-    shifr(std::string text1): text(text1)
+    gammirovanie(std::string text1): text(text1) //Пользовательский конструктор
     {
-        std::vector<int> temp; // буквы в 10 видe
-        std::vector<int> temp2; //
         for(int i = 0; i < text.size(); i++)
         {
-            temp.push_back(int(text[i]));
+            text_2.push_back(dvoich(int(text[i])));
         }
 
-        for(int i = 0; i < temp.size(); i++)
+        gamma.resize(text_2.size());
+        c_text_2.resize(text_2.size());
+        for (int i = 0; i<gamma.size(); i++)
         {
-            temp2[i] = dvoich(temp[i]);
-            for (int k = 0; k<temp2.size(); k++)
+            c_text_2[i].resize(text_2[i].size());
+            gamma[i].resize(text_2[i].size());
+        }
+
+        for (int i=0; i<gamma.size(); i++)
+        {
+            for (int k = 0; k<gamma[i].size(); k++)
             {
-                text_2.push_back(temp2[k]);
+                gamma[i][k] = rand() %2;
             }
         }
-
     };
 
-    void print_c()
+    void shifr ()
     {
-        std::cout << text << " " << c_text << " ";
-        for (int i = 0; i < gamma.size(); i++)
+        for (int i=0; i<gamma.size(); i++)
         {
-            std::cout << gamma[i];
-        }
-        std::cout << std::endl;
-        for (int i = 0; i < text_2.size(); i++)
-        {
-            std::cout << text_2[i];
-            if (i%4==0) {std::cout << "      ";};
+            for (int k=0; k<gamma[i].size(); k++)
+            {
+                if (text_2[i][k] == gamma[i][k]) c_text_2[i][k] = 0;
+                else c_text_2[i][k] = 1;
+            }
         }
     }
+
+    void print ()
+    {
+        std::cout << text << std::endl;
+        for (int i=0; i<text_2.size(); i++)
+        {
+            for (int k=0; k<text_2[i].size(); k++)
+            {
+                std::cout << text_2[i][k];
+            }
+            std::cout << std::endl;
+        }
+        std::cout << "TEPER GAMMA" << std::endl;
+        for (int i=0; i<gamma.size(); i++)
+        {
+            for (int k=0; k<gamma[i].size(); k++)
+            {
+                std::cout << gamma[i][k];
+            }
+            std::cout << std::endl;
+        }
+    }
+
 };
 
 int main()
 {
-    shifr a("hello");
-    a.print_c();
+    srand(time(NULL));
+    gammirovanie a("Hello World");
+    a.print();
 }

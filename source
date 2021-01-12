@@ -2,6 +2,7 @@
 #include <vector>
 #include <ctime>
 #include <cstdlib>
+#include <cmath>
 
 std::vector<bool> dvoich(int a) //перевод из десятичного в двоичного
 {
@@ -32,7 +33,13 @@ std::vector<bool> dvoich(int a) //перевод из десятичного в 
 
 int desyatich (std::vector<bool> a)
 {
-
+    int k,j=0;
+    for (int i=a.size()-1; i>=0; i--)
+    {
+        k+=a[j]*pow(2, i);
+        j++;
+    }
+    return k;
 }
 
 class gammirovanie
@@ -73,6 +80,12 @@ public:
                 gamma[i][k] = rand() %2;
             }
         }
+        shifr();
+
+        for (int i=0; i<c_text_2.size(); i++)
+        {
+            c_text.push_back(char(desyatich(c_text_2[i])));
+        }
     };
 
     void shifr ()
@@ -96,17 +109,25 @@ public:
             {
                 std::cout << text_2[i][k];
             }
-            std::cout << std::endl;
         }
-        std::cout << "TEPER GAMMA" << std::endl;
+        std::cout << std::endl;
         for (int i=0; i<gamma.size(); i++)
         {
             for (int k=0; k<gamma[i].size(); k++)
             {
                 std::cout << gamma[i][k];
             }
-            std::cout << std::endl;
         }
+        std::cout << std::endl;
+        for (int i=0; i<c_text_2.size(); i++)
+        {
+            for (int k=0; k<c_text_2[i].size(); k++)
+            {
+                std::cout << c_text_2[i][k];
+            }
+        }
+        std::cout << std::endl;
+        std::cout << c_text;
     }
 
 };
@@ -116,4 +137,5 @@ int main()
     srand(time(NULL));
     gammirovanie a("Hello World");
     a.print();
+
 }

@@ -137,5 +137,4 @@ int main()
     srand(time(NULL));
     gammirovanie a("Hello World");
     a.print();
-
 }
